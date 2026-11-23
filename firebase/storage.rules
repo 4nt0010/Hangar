@@ -1,0 +1,11 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Cataloghi: users/{uid}/volumes/{volumeId}/catalog.json.deflate
+    match /users/{uid}/{allPaths=**} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+                            && request.resource.size < 100 * 1024 * 1024;
+    }
+  }
+}
